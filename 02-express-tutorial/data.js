@@ -1,3 +1,56 @@
+const express = require('express')
+const app = express()
+
+const { products } = require('./data')
+
+app.get('/',(req,res) => {
+  res.send('<h1>home Page</h1><a href="/api/products">products</a>')
+})
+
+app.get('/api/v1/products', (req,res) => {
+  res.json(products)
+})
+
+app.get('/api/v1/products/:productID', (req, res) =>{
+  //res.json(req.params)
+ // const idToFind = parseInt(req.params.productID)
+ const {idToFind} = req.params
+ 
+ const product = products.find(
+    (product) => p.id === Number(idToFind)
+  )
+  if(!idToFind){
+    return res.status(404).send('That product was not found.')
+  }
+
+
+  return res.json(idToFind)
+  })
+
+  app.get('/api/v1/query', (req,res) => {
+    //console.log(req.query)
+    //res.send('hello world')
+    const {search, limit}=[...products]
+    
+    if(search){
+      sortedProducts= sortedProducts.filter((product) =>{
+        return product.name.startsWith(search)
+      })
+    }
+    if(limit){
+      sortedProducts= sortedProducts.slice(0,Number(limit))
+    }
+    if(sortedProducts.length < 1){
+      return res.status(200).json({success: true, data: []})
+    }
+    res.status(200).json(sortedProducts)
+  })
+
+app.listen(3000,() =>{
+  console.log('Server is listening on port 3000...')
+})
+
+
 const products = [
   {
     id: 1,
@@ -40,3 +93,5 @@ const people = [
   { id: 5, name: 'emma' },
 ]
 module.exports = { products, people }
+
+
