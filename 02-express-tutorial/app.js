@@ -1,3 +1,70 @@
+const express = require('express')
+const app = express()
+const logger = require('./logger')
+const authorize = require ('./authorize')
+//req => middleware => res
+
+const people = require('./routes/v1/people')
+
+
+//Middleware
+//app.use([logger,authorize])
+app.use(express.static('./public'))
+
+app.get('/', logger, (req, res) => {
+  res.send('Home')
+})
+
+app.get('/about', logger, (req, res) => {
+  res.send('About')
+})
+
+app.get('/api/products', logger,(req,res) =>{
+    res.send('Products')
+})
+
+app.get('/api/items', [logger, authorize], (req,res) =>{
+    console.log(req.user)
+    res.send('Items')
+})
+
+
+//static assets 
+
+app.use(express.static('./methods-public'))
+
+//parse from data 
+app.use(express.urlencoded({extended: false}))
+
+//parse json
+app.use(express.json())
+
+app.use('/api/v1/people', people) // or peopleRouter
+
+
+app.listen(3000, () => {
+  console.log('server is listening on port 3000...')
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// HTTP-app
 
 //const http = require ('http')
 //const {readFileSync} = require('fs')
@@ -65,37 +132,45 @@
 
 //server.listen(3000)
 
-const express = require('express')
-//const path = require('path')
 
-const app = express()
 
-app.get('/', (req, res) =>{
-    console.log('user hit the resource')
-    res.status(200).send('Stephanie Home Page')
-})
 
-app.get('/about', (req,res) =>{
-    res.status(200).send('About Page')
-})
+
+
+//Express basics 
+//IMPORTANT 
+
+//const express = require('express')
+// NOT PART OF IMPORTANT const path = require('path')
+
+//const app = express()
+
+//app.get('/', (req, res) =>{
+    //console.log('user hit the resource')
+    //res.status(200).send('Stephanie Home Page')
+//})
+
+//app.get('/about', (req,res) =>{
+  //  res.status(200).send('About Page')
+//})
 // middleware
-app.use(express.static('./public'))
+//app.use(express.static('./public'))
 
-app.get('/api/V1/test', (req, res) =>{
-    res.json({message: 'It Worked!'})
-})
-
-
-
-app.all('*', (req,res) =>{
-    res.status(404).send('<h1>resource not found </h1>')
-})
+//app.get('/api/V1/test', (req, res) =>{
+  //  res.json({message: 'It Worked!'})
+//})
 
 
 
-app.listen(3000, () => {
-    console.log('server is listening on port 3000...')
-})
+//app.all('*', (req,res) =>{
+  //  res.status(404).send('<h1>resource not found </h1>')
+//})
+
+
+
+//app.listen(3000, () => {
+  //  console.log('server is listening on port 3000...')
+//})
 
 //app.get
 //app.post
@@ -104,3 +179,39 @@ app.listen(3000, () => {
 //app.all
 // app.use
 //app.listen
+
+
+//Middleware
+//const express = require('express')
+//const app = express()
+//const morgan = require('morgan')
+//const logger = require('./logger')
+//const authorize = require('./authorize')
+////Not useful// req =>  middleware => res
+////Not useful//app.use([ logger, authorize])
+//// Not useful //app.use(express.static('./public'))
+
+////Not useful// api/home/about/products
+
+//app.use(morgan('tiny'))
+//app.get('/', (req, res) =>{
+ //   res.send('Home')
+//})
+
+//app.get('/about', (req,res) => {
+  //  res.send('About')
+//})
+
+//app.get('/api/products', logger,(req,res) =>{
+   // res.send('Products')
+//})
+
+//app.get('/api/items', [logger, authorize], (req,res) =>{
+  //  console.log(req.user)
+  //  res.send('Items')
+//})
+
+
+//app.listen(3000, () => {
+   // console.log('server is listening on port 3000...')
+//})
