@@ -1,0 +1,24 @@
+
+
+In this lesson, you created a middleware function called asyncWrapper. Why?
+
+We created asyncWrapper to avoid using try catch over and over again in the controllers, 
+but still use the await syntax. In other words, instead of putting 
+try catch blocks in each controller we simply set up the try catch block
+inside of the wrapper and  wrap whichever controller we would like to use await in.  
+
+
+Suppose that you want to make sure that both a status code and an error message are sent back to the 
+user when they request the URL for a task that does not exist. Assume that you’ve created a CustomAPIError
+ class and an error handler that references that class. Complete the code:
+
+
+ 
+const getTask = asyncWrapper(async (req, res, next) => {  
+  const { id: taskID } = req.params;  
+  const task = await Task.findOne({ _id: taskID });  
+  if (!task) {  
+    return next(createCustomError(`No task with id : ${taskID}`, 404))
+  }  
+  res.status(200).json({ task });  
+});  
